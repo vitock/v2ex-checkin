@@ -13,7 +13,7 @@ const header = {
         Referer: "https://www.v2ex.com/mission",
         Host: "www.v2ex.com",
         "user-agent": "Mozilla/5.0 (Linux; Android 10; Redmi K30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.83 Mobile Safari/537.36",
-        cookie: `'${cookie}'`,
+        cookie: `${cookie}`,
     },
 };
 
@@ -23,11 +23,13 @@ function check() {
         try {
             let url = "https://www.v2ex.com/mission/daily";
             let res = await axios.get(url, header);
+            
             reg1 = /需要先登录/;
             if (reg1.test(res.data)) {
-                console.log("cookie失效");
+
+                console.log("cookie失效1");
                 ckstatus = 0;
-                notice += "cookie失效";
+                notice += "cookie失效2";
             } else {
                 reg = /每日登录奖励已领取/;
                 if (reg.test(res.data)) {
@@ -87,6 +89,9 @@ function balance() {
 
 //推送结果
 function qmsg(msg) {
+    if(!qmsgapi){
+        return;
+    }
     return new Promise(async (resolve) => {
         try {
             let url = `${qmsgapi}?msg=${encodeURI(msg)}`;
@@ -125,15 +130,15 @@ function sign() {
             } else {}
           
             console.log(notice);
-            fs.writeFile("./signresult.txt",notice +  `\n`, {flag: "a", },
-                (err) => {
-                    if (err) {
-                        throw err;
-                    } else {
-                        console.log("success");
-                    }
-                }
-            );
+            // fs.writeFile("./signresult.txt",notice +  `\n`, {flag: "a", },
+            //     (err) => {
+            //         if (err) {
+            //             throw err;
+            //         } else {
+            //             console.log("success");
+            //         }
+            //     }
+            // );
             await qmsg(notice);
         } catch (err) {
             console.log(err);
